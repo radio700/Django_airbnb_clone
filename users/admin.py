@@ -5,7 +5,7 @@ from .models import User
 # Register your models here.
 
 
-# @admin.register(User)
+@admin.register(User)
 class CustomUserAdmin(UserAdmin):
     """ " custom user admin"""
 
@@ -25,7 +25,18 @@ class CustomUserAdmin(UserAdmin):
             },
         ),
     )
-    # list_display = ('username','gender','language','currency','is_superhost')
-    # list_filter = ("language","is_superhost","currency")
 
-admin.site.register(User,CustomUserAdmin)
+    # list_filter = UserAdmin.list_filter + ("is_superhost")
+
+    list_display = (
+        "username",
+        "first_name",
+        "last_name",
+        "email",
+        "is_active",
+        "language",
+        "currency",
+        "is_superhost",
+        "is_staff",
+        "is_superuser",
+    )
