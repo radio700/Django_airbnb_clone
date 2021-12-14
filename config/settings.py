@@ -27,7 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-###
+# Application definition##########################################
+
 DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -37,13 +38,24 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-PROJECT_APPS = [
-    "users.apps.UsersConfig",
+THIRD_PARTY_APPS = [
+    "django-countries",
 ]
 
-# Application definition
+PROJECT_APPS = [
+    "core.apps.CoreConfig",
+    "users.apps.UsersConfig",
+    "rooms.apps.RoomsConfig",
+    "reviews.apps.ReviewsConfig",
+    "reservations.apps.ReservationsConfig",
+    "lists.apps.ListsConfig",
+    "conversations.apps.ConversationsConfig",
+]
+
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS
+
+####################################################################
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -130,4 +142,4 @@ STATIC_URL = "/static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = "users.User"
