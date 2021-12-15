@@ -1,29 +1,38 @@
 from django.contrib import admin
 from . import models
+from django.utils.safestring import mark_safe
 
 # Register your models here.
 
 
 @admin.register(models.RoomType, models.Amenity, models.Facility, models.HouseRule)
 class ItemAdmin(admin.ModelAdmin):
-    
+
     list_display = (
         "name",
         "used_by",
     )
 
-    def used_by(self,obj):
+    def used_by(self, obj):
         return obj.rooms.count()
+
     pass
+
+
+class PhotoInline(admin.TabularInline):
+
+    model = models.Photo
 
 
 @admin.register(models.Room)
 class RoomAdmin(admin.ModelAdmin):
 
+    inlines = (PhotoInline,)
+
     fieldsets = (
         (
             "Basic info",
-            {"fields": ("name", "description", "country", "address", "price")},
+            {"fields": ("name", "description", "country", "city", "address", "price")},
         ),
         (
             "Times",
@@ -79,6 +88,8 @@ class RoomAdmin(admin.ModelAdmin):
         "house_rules",
         "country",
     )
+    raw_id_fields = ("host",)
+    # 호스트가 많으니까 이렇게함
 
     search_fields = ["^city", "^host__username"]
     filter_horizontal = (
@@ -96,6 +107,14 @@ class RoomAdmin(admin.ModelAdmin):
 
 @admin.register(models.Photo)
 class PhotoAdmin(admin.ModelAdmin):
-    """ """
+    """photo admin"""
 
-    pass
+    list_display = (
+        "__str__",
+        "get_thumbnail",
+    )
+
+    def get_thumbnail(self, obj):
+        return mark_safe(f'<img width="100px" src="{obj.file.url}" />')
+
+    get_thumbnail.short_description = "thumbnail"
