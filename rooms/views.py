@@ -1,7 +1,11 @@
-# from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render
+from django.urls.base import reverse
 # from django.core.paginator import EmptyPage, Paginator
 from django.views.generic import ListView
-from django.utils import timezone
+# from django.utils import timezone
+from django.http import Http404
+
+
 from . import models
 
 # Create your views here.
@@ -27,9 +31,14 @@ class HomeView(ListView):
     page_kwarg = 'page'
     context_object_name = "rooms"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        now = timezone.now()
-        context["now"] = now
-        return context
+def room_detail(request,pk):
+    try:
+        room = models.Room.objects.get(pk=pk)
+        context = {'room':room}
+        return render(request,"rooms/detail.html",context)
+
+    except models.Room.DoesNotExist:
+        # return redirect(reverse("core:home"))
+        raise Http404
+
 

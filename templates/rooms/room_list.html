@@ -2,10 +2,12 @@
 {% block page_name %}HOME{% endblock page_name %}
 {% block content %}
 
-  {{now}}
+  {% comment %} {{now}} {% endcomment %}
 
   {% for room in rooms %}
-    <h3>{{forloop.counter}} : {{ room.name }}/ ${{ room.price }}</h3>
+    <h3>
+      <a href="{% url 'rooms:detail' room.pk %}">{{forloop.counter}} : {{ room.name }}/ ${{ room.price }}</a>
+    </h3>
   {% endfor %}
 
   <h5>
