@@ -2,21 +2,28 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-      {% block page_name %}{% endblock page_name %}| NBNB</title>
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    {% block page_title %}{% endblock page_title %}| NBNB</title>
+</head>
 
-  {% include "partials/header.html" %}
+<body>
 
-  <body>
+  <header>
+    {% include "partials/nav.html" %}
+    {% block search-bar %}
+    <form action="{% url 'rooms:search' %}" method="get">
+      <input name="city" placeholder="search by city">
+    </form>
+    {% endblock search-bar %}
+  </header>
 
-    {% block content %}{% endblock content %}
-  </body>
+  {% block content %}{% endblock content %}
+</body>
 
-  {% include "partials/footer.html" %}
+{% include "partials/footer.html" %}
 
 </html>
