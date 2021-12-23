@@ -1,4 +1,10 @@
-# from django.urls import path
+from django.urls import path
+from . import views
 
-# urlpatterns = [
-# ]
+app_name = "users"
+# http://127.0.0.1:8000/users/login/
+
+urlpatterns = [
+    path("login/", views.LoginView.as_view(), name="login"),
+    path("logout/", views.log_out, name="logout"),
+]
