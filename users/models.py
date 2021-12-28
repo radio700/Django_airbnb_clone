@@ -40,4 +40,9 @@ class User(AbstractUser):
     language = models.CharField(choices=LANGUAGE_CHOICES, blank=True, max_length=2, default=LANGUAGE_KOREAN)
     currency = models.CharField(choices=CURRENCY_CHOICES, blank=True, max_length=3, default=CURRENCY_KRW)
     is_superhost = models.BooleanField(default=False)
+    email_confirmed = models.BooleanField(default=False)
+    email_secret = models.CharField(max_length=120,default="",blank=True)
+
+    def verify_email(self):
+        pass
 
