@@ -11,6 +11,9 @@ pillow = "*"
 django-countries = "*"
 django-seed = "*"
 psycopg2 = "*"
+python-dotenv = "*"
+django-environ = "*"
+requests = "*"
 
 [dev-packages]
 
