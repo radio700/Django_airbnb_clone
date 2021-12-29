@@ -52,6 +52,7 @@ class SignupView(FormView):
         user = authenticate(self.request, username=email, password=password)
         if user is not None:
             login(self.request, user)
+        user.verify_email()
         return super().form_valid(form)
 
 
@@ -60,6 +61,10 @@ def github_login(request):
     redirect_uri = "http://127.0.0.1:8000/users/login/github/callback"
     return redirect(
         f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=read:user"
+        # [[1]]유저가 버튼을 누를경우 깃허브로 이동해서 인증을 받아온 후 redirect_uri로 이동한다 -> callback으로 이동된다
+        # scope=read:user는 Grants access to read a user's profile data 권한을 설정한다
+        # 자세한건 https://docs.github.com/en/developers/apps/building-oauth-apps/scopes-for-oauth-apps
+        # 참조 할 것 https://clownhacker.tistory.com/170
     )
 
 
@@ -72,30 +77,39 @@ def github_callback(request):
         client_id = "193455c9cd3ca7ed7ede"
         client_secret = "2f3ad78a6cb6b4795385705862d118562a5f5894"
         code = request.GET.get("code", None)
+        print(f"--------------{code}<<<<<<코드임")
         if code is not None:
+            # [[2]]github에서 전달해준 code를 이용해서 다시 POST형태로 github에 access_token을 요청한다
             token_request = requests.post(
                 f"https://github.com/login/oauth/access_token?client_id={client_id}&client_secret={client_secret}&code={code}",
                 headers={"Accept": "application/json"},
+                # [[2.5]]↑요 주소로 요청을 보내면 access_token과 찌끄레기들이 json형태로 나온다 post(f"", headers={})에 주의할것
             )
             token_json = token_request.json()
+            print(f"--------------------{token_json}<<<<<<<토큰임")
             error = token_json.get("error", None)
             if error is not None:
                 raise GithubException()
             else:
                 access_token = token_json.get("access_token")
+                print(f"-------------------{access_token}<<<<<<<토큰중에 access_token 부분만 뗀거임")
                 profile_request = requests.get(
                     "https://api.github.com/user",
                     headers={
                         "Authorization": f"token {access_token}",
                         "Accept": "application/json",
                     },
+                    # [[3]] 받아온 access_tocken을 https://api.github.com/user 주소로 요청해서 유저의 정보를 가져온다
+                    # get("", headers={})에 주의할것
                 )
                 profile_json = profile_request.json()
+                print(f"-------------------{profile_json}<<<<<<<프로파일 json임")
                 username = profile_json.get("login", None)
+                # username = radio700
                 if username is not None:
                     name = profile_json.get("name")
-                    if name is None:
-                        name = username
+                    if name is None: # sejung_kim이 없을 경우
+                        name = username # username(radio700)을 name에 넣어준다
                     email = profile_json.get("email")
                     if email is None:
                         email = name
@@ -104,8 +118,9 @@ def github_callback(request):
                         bio = ""
                     try:
                         user = models.User.objects.get(email=email)
+                        print(f"-------------------------{user}<<<<<<<<<<<유저임")
                         if user.login_method != models.User.LOGIN_GITHUB:
-                            raise GithubException()
+                            raise GithubException(f"정해진 로그인 메소드로 로그인 해주세요 ->{user.login_method}")
                     except models.User.DoesNotExist:
                         user = models.User.objects.create(
                             email=email,
@@ -119,8 +134,8 @@ def github_callback(request):
                     login(request, user)
                     return redirect("core:home")
                 else:
-                    raise GithubException()
+                    raise GithubException("유저 네임이 존재하지 않아여")
         else:
-            raise GithubException()
+            raise GithubException("깃허브에서 코드가 없어요ㅠ")
     except GithubException:
         return redirect("users:login")
