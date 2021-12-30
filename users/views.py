@@ -8,8 +8,7 @@ from django.views.generic import FormView
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse_lazy
-from . import forms
-from . import models
+from . import forms, models
 
 # Create your views here.
 
@@ -55,6 +54,19 @@ class SignupView(FormView):
             login(self.request, user)
         user.verify_email()
         return super().form_valid(form)
+
+def complete_verification(request, key):
+    try:
+        user = models.User.objects.get(email_secret=key)
+        user.email_verified = True
+        user.email_secret= ""
+        user.save()
+        #to do 성공메시지 구현할것
+    except models.User.DoesNotExist:
+        #to do : add 에러메시지 처리할것
+        pass
+    return redirect("core:home")
+
 
 
 # 인증코드요청 -> 인증코드전달 -> 인증코드로 토큰요청 -> 토큰전달 -> 토큰으로 API 호출 -> 응답전달
