@@ -1,5 +1,8 @@
+import uuid
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.mail import send_mail
 
 # Create your models here.
 
@@ -57,3 +60,18 @@ class User(AbstractUser):
     login_method = models.CharField(
         max_length=50, choices=LOGIN_CHOICES, default=LOGIN_EMAIL
     )
+    email_verified = models.BooleanField(default=False)
+    email_secret = models.CharField(max_length=120, default="", blank=True)
+
+    def verify_email(self):
+        if self.email_verified is False:
+            secret = uuid.uuid4().hex[:20]
+            self.email_secret = secret
+            send_mail(
+                "Verify Airbnb Account",
+                f'이메일 인증 바로가기 >> <a href="http://127.0.0.1:8000/users/verify/{secret}">here</a>" ',
+                settings.EMAIL_FROM,
+                [self.email],
+                fail_silently=False,
+            )
+        return
