@@ -1,11 +1,16 @@
 <div>
+  <ul>
+    <li>
+      <a href="{% url 'users:github-login' %}">
+        <p>깃허브로 계속하기</p>
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'users:kakao-login' %}">
+        <p>카카오로계속하기</p>
+      </a>
 
-  <a href="{% url 'users:github-login' %}">
-    Continue with Github
-  </a>
-
-  <a href="">
-    Continue with KAKAo
-  </a>
+    </li>
+  </ul>
 
 </div>
