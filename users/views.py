@@ -1,6 +1,7 @@
 # import os
 # import dotenv
 import requests
+import os
 
 from django.views import View
 from django.views.generic import FormView
@@ -58,7 +59,7 @@ class SignupView(FormView):
 
 # 인증코드요청 -> 인증코드전달 -> 인증코드로 토큰요청 -> 토큰전달 -> 토큰으로 API 호출 -> 응답전달
 def github_login(request):
-    client_id = "193455c9cd3ca7ed7ede"
+    client_id = os.environ.get("GITHUB_CLIENT_ID")
     redirect_uri = "http://127.0.0.1:8000/users/login/github/callback"
     return redirect(
         f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=read:user"
@@ -75,8 +76,8 @@ class GithubException(Exception):
 
 def github_callback(request):
     try:
-        client_id = "193455c9cd3ca7ed7ede"
-        client_secret = "2f3ad78a6cb6b4795385705862d118562a5f5894"
+        client_id = os.environ.get("GITHUB_CLIENT_ID")
+        client_secret = os.environ.get("GITHUB_CLIENT_SECRET")
         code = request.GET.get("code", None)
         # print(f"--------------{code}<<<<<<코드임")
         if code is not None:
@@ -145,7 +146,7 @@ def github_callback(request):
 
 
 def kakao_login(request):
-    client_id = "f50c5cef45ce31fb7c8b90aa5e5b5073"
+    client_id = os.environ.get("KAKAO_CLIENT_ID")
     redirect_uri = "http://127.0.0.1:8000/users/login/kakao/callback"
     return redirect(
         f"https://kauth.kakao.com/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code"
@@ -159,7 +160,7 @@ class KakaoException(Exception):
 def kakao_callback(request):
     try:
         code = request.GET.get("code")
-        client_id = "f50c5cef45ce31fb7c8b90aa5e5b5073"
+        client_id = os.environ.get("KAKAO_CLIENT_ID")
         redirect_uri = "http://127.0.0.1:8000/users/login/kakao/callback"
         token_request = requests.get(
             f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={client_id}&redirect_uri={redirect_uri}&code={code}"
