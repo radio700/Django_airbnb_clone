@@ -2,28 +2,33 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>
-    {% block page_title %}{% endblock page_title %}| NBNB</title>
-</head>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>
+      {% block page_title %}{% endblock page_title %}| NBNB</title>
+  </head>
 
-<body>
+  <body>
+    <header class="container max-w-full flex items-center">
+      <div class="flex">
+        <a href="{% url 'core:home' %}">
+          <img class="w-8" src="{% static 'img/logo.png' %}" alt="">
+        </a>
+        {% block search-bar %}
+          <form method="get" action="{% url 'rooms:search' %}">
+            <input name="city" placeholder="search by city">
+          </form>
+        {% endblock search-bar %}
+      </div>
+      {% include "partials/nav.html" %}
+    </header>
 
-  <header>
-    {% include "partials/nav.html" %}
-    {% block search-bar %}
-    <form action="{% url 'rooms:search' %}" method="get">
-      <input name="city" placeholder="search by city">
-    </form>
-    {% endblock search-bar %}
-  </header>
+    {% block content %}{% endblock content %}
+  </body>
 
-  {% block content %}{% endblock content %}
-</body>
-
-{% include "partials/footer.html" %}
+  {% include "partials/footer.html" %}
 
 </html>

@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+html{
+    font-size: 10px;
+}
+
+.box{
+    font-size: 20px;
+    .child{
+        width: 0.5rem;
+    }
+}
