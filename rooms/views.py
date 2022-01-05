@@ -23,7 +23,7 @@ class HomeView(ListView):
     """homeview def"""
 
     model = models.Room
-    paginate_by = 10
+    paginate_by = 12
     ordering = "created"
     paginate_orphans = 5
     page_kwarg = "page"
