@@ -3,6 +3,7 @@
 import requests
 import os
 
+from django.urls import reverse
 from django.views import View
 from django.views.generic import FormView
 from django.shortcuts import render, redirect
@@ -39,12 +40,7 @@ class SignupView(FormView):
     template_name = "users/signup.html"
     form_class = forms.SignupForm
     success_url = reverse_lazy("core:home")
-    initial = {
-        "first_name": "kim",
-        "last_name": "sejung",
-        "email": "radio700@hanmail.net",
-    }
-
+    
     def form_valid(self, form):
         form.save()
         email = form.cleaned_data.get("email")
@@ -55,17 +51,18 @@ class SignupView(FormView):
         user.verify_email()
         return super().form_valid(form)
 
+
 def complete_verification(request, key):
     try:
         user = models.User.objects.get(email_secret=key)
         user.email_verified = True
-        user.email_secret= ""
+        user.email_secret = ""
         user.save()
-        #to do 성공메시지 구현할것
+        # to do: add succes message
     except models.User.DoesNotExist:
-        #to do : add 에러메시지 처리할것
+        # to do: add error message
         pass
-    return redirect("core:home")
+    return redirect(reverse("core:home"))
 
 
 
@@ -183,11 +180,10 @@ def kakao_callback(request):
             raise KakaoException()
         access_token = token_json.get("access_token")
 
-
         profile_request = requests.post("https://kapi.kakao.com/v2/user/me",headers={"Authorization": f"Bearer {access_token}"},)
 
         profile_json = profile_request.json()
-        print(profile_json)
+
         kakao_account = profile_json.get("kakao_account")
         email = kakao_account["email"]
         profile = kakao_account["profile"]
@@ -208,10 +204,10 @@ def kakao_callback(request):
             )
             user.set_unusable_password()
             user.save()
-            login(request, user)
-            return redirect("core:home")
+        login(request, user)
+        return redirect(reverse("core:home"))
     except KakaoException:
-        return redirect("users:login")
+        return redirect(reverse("users:login"))
 
 
 

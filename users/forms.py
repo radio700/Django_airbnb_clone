@@ -2,8 +2,8 @@ from django import forms
 from . import models
 
 class LoginForm(forms.Form):
-    email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput)
+    email = forms.EmailField(widget=forms.EmailInput(attrs={"placeholder":"이메일을 입력하세요"}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder":"비밀번호를 입력하세요"}))
 
     def clean(self):
         email = self.cleaned_data.get("email")
@@ -21,9 +21,14 @@ class SignupForm(forms.ModelForm):
     class Meta:
         model = models.User
         fields = ("first_name","last_name","email","password")
+        widgets ={
+            'first_name':forms.TextInput(attrs={"placeholder":"이름을 입력하세요"}),
+            'last_name':forms.TextInput(attrs={"placeholder":"성을 입력하세요"}),
+            'email':forms.EmailInput(attrs={"placeholder":"이메일을 입력하세요"}),
+        }
 
-    password = forms.CharField(widget=forms.PasswordInput)
-    password1 = forms.CharField(widget=forms.PasswordInput,label='패스확인')
+    password = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder":"비밀번호를 입력하세요"}))
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder":"비밀번호를 입력하세요"}),label='패스확인')
 
     def clean_password1(self):
         password = self.cleaned_data.get("password")
