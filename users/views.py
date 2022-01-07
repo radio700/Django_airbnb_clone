@@ -225,3 +225,4 @@ class UserProfileView(DetailView):
     context_object_name = 'user_obj'
 
 
+
