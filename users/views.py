@@ -5,7 +5,7 @@ import os
 
 from django.urls import reverse
 from django.views import View
-from django.views.generic import FormView
+from django.views.generic import FormView, DetailView
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse_lazy
@@ -33,6 +33,7 @@ class LoginView(View):
 
 
 def log_out(request):
+    messages.info(request, "See you later")
     logout(request)
     return redirect("core:home")
 
@@ -219,6 +220,7 @@ def kakao_callback(request):
         messages.error(request, e)
         return redirect(reverse("users:login"))
 
-
+# class UserProfileView(DetailView):
+#     pass
 
 
