@@ -9,10 +9,11 @@ from django.views.generic import FormView
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse_lazy
+from django.core.files.base import ContentFile
+from django.contrib import messages
 from . import forms, models
 
 # Create your views here.
-
 
 class LoginView(View):
     def get(self, request):
@@ -100,7 +101,7 @@ def github_callback(request):
             # print(f"--------------------{token_json}<<<<<<<토큰임")
             error = token_json.get("error", None)
             if error is not None:
-                raise GithubException()
+                raise GithubException("접근 토큰에 억세스 불가능함")
             else:
                 access_token = token_json.get("access_token")
                 # print(f"-------------------{access_token}<<<<<<<토큰중에 access_token 부분만 뗀거임")
@@ -145,12 +146,14 @@ def github_callback(request):
                         user.set_unusable_password()
                         user.save()
                     login(request, user)
+                    messages.success(request, f"{user.first_name}님 환영합니다")
                     return redirect("core:home")
                 else:
-                    raise GithubException("유저 네임이 존재하지 않아여")
+                    raise GithubException("프로파일을 얻을 수가 없어요")
         else:
             raise GithubException("깃허브에서 코드가 없어요ㅠ")
-    except GithubException:
+    except GithubException as e:
+        messages.error(request, e)
         return redirect("users:login")
 
 
@@ -177,7 +180,7 @@ def kakao_callback(request):
         token_json = token_request.json()
         error = token_json.get("error", None)
         if error is not None:
-            raise KakaoException()
+            raise KakaoException("인증코드에 접근 못함")
         access_token = token_json.get("access_token")
 
         profile_request = requests.post("https://kapi.kakao.com/v2/user/me",headers={"Authorization": f"Bearer {access_token}"},)
@@ -186,6 +189,8 @@ def kakao_callback(request):
 
         kakao_account = profile_json.get("kakao_account")
         email = kakao_account["email"]
+        if email is None:
+            raise KakaoException("이메일이 없어요")
         profile = kakao_account["profile"]
         nickname = profile["nickname"]
         profile_image_url = profile['profile_image_url']
@@ -193,7 +198,7 @@ def kakao_callback(request):
         try:
             user = models.User.objects.get(email=email)
             if user.login_method != models.User.LOGING_KAKAO:
-                raise KakaoException()
+                raise KakaoException(f"{user.login_method}로 로그인 해주세요")
         except models.User.DoesNotExist:
             user = models.User.objects.create(
                 email=email,
@@ -204,9 +209,14 @@ def kakao_callback(request):
             )
             user.set_unusable_password()
             user.save()
+            if profile_image_url is not None:
+                photo_request = requests.get(profile_image_url)
+                user.avatar.save(f"{nickname}-avatar", ContentFile(photo_request.content))
         login(request, user)
+        messages.success(request, f"{user.first_name}님 다시보네요:)")
         return redirect(reverse("core:home"))
-    except KakaoException:
+    except KakaoException as e:
+        messages.error(request, e)
         return redirect(reverse("users:login"))
 
 
