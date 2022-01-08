@@ -4,33 +4,37 @@ import requests
 import os
 
 from django.urls import reverse
-from django.views import View
 from django.views.generic import FormView, DetailView, UpdateView
 from django.contrib.auth.views import PasswordChangeView
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse_lazy
 from django.core.files.base import ContentFile
 from django.contrib import messages
-from . import forms, models
+from django.contrib.messages.views import SuccessMessageMixin
+from . import forms, models, mixins
 
 # Create your views here.
 
-class LoginView(View):
-    def get(self, request):
-        form = forms.LoginForm()
-        return render(request, "users/login.html", {"form": form})
+class LoginView(mixins.LoggedOutOnlyView, FormView):
 
-    def post(self, request):
-        form = forms.LoginForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data.get("email")
-            password = form.cleaned_data.get("password")
-            user = authenticate(self.request, username=email, password=password)
-            if user is not None:
-                login(self.request, user)
-                return redirect("core:home")
-        return render(request, "users/login.html", {"form": form})
+    template_name = "users/login.html"
+    form_class = forms.LoginForm
+
+    def form_valid(self, form):
+        email = form.cleaned_data.get("email")
+        password = form.cleaned_data.get("password")
+        user = authenticate(self.request, username=email, password=password)
+        if user is not None:
+            login(self.request, user)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        next_arg = self.request.GET.get("next")
+        if next_arg is not None:
+            return next_arg
+        else:
+            return reverse("core:home")
 
 
 def log_out(request):
@@ -43,7 +47,7 @@ class SignupView(FormView):
     template_name = "users/signup.html"
     form_class = forms.SignupForm
     success_url = reverse_lazy("core:home")
-    
+
     def form_valid(self, form):
         form.save()
         email = form.cleaned_data.get("email")
@@ -66,7 +70,6 @@ def complete_verification(request, key):
         # to do: add error message
         pass
     return redirect(reverse("core:home"))
-
 
 
 # 인증코드요청 -> 인증코드전달 -> 인증코드로 토큰요청 -> 토큰전달 -> 토큰으로 API 호출 -> 응답전달
@@ -185,7 +188,10 @@ def kakao_callback(request):
             raise KakaoException("인증코드에 접근 못함")
         access_token = token_json.get("access_token")
 
-        profile_request = requests.post("https://kapi.kakao.com/v2/user/me",headers={"Authorization": f"Bearer {access_token}"},)
+        profile_request = requests.post(
+            "https://kapi.kakao.com/v2/user/me",
+            headers={"Authorization": f"Bearer {access_token}"},
+        )
 
         profile_json = profile_request.json()
 
@@ -195,7 +201,7 @@ def kakao_callback(request):
             raise KakaoException("이메일이 없어요")
         profile = kakao_account["profile"]
         nickname = profile["nickname"]
-        profile_image_url = profile['profile_image_url']
+        profile_image_url = profile["profile_image_url"]
 
         try:
             user = models.User.objects.get(email=email)
@@ -213,22 +219,24 @@ def kakao_callback(request):
             user.save()
             if profile_image_url is not None:
                 photo_request = requests.get(profile_image_url)
-                user.avatar.save(f"{nickname}-avatar", ContentFile(photo_request.content))
+                user.avatar.save(
+                    f"{nickname}-avatar", ContentFile(photo_request.content)
+                )
         login(request, user)
-        messages.success(request, f"{user.first_name}님 다시보네요:)")
+        messages.success(request, f"{user.first_name}{user.last_name}님 다시보네요:)")
         return redirect(reverse("core:home"))
     except KakaoException as e:
         messages.error(request, e)
         return redirect(reverse("users:login"))
 
+
 class UserProfileView(DetailView):
 
     model = models.User
-    context_object_name = 'user_obj'
+    context_object_name = "user_obj"
 
 
-
-class UpdateProfileView(UpdateView):
+class UpdateProfileView(mixins.LoggedInOnlyView, SuccessMessageMixin, UpdateView):
 
     model = models.User
     template_name = "users/update-profile.html"
@@ -242,9 +250,41 @@ class UpdateProfileView(UpdateView):
         "language",
         "currency",
     )
+    success_message = "프로파일이 업데이트 됐어요"
 
     def get_object(self, queryset=None):
         return self.request.user
 
-class UpdatePasswordView(PasswordChangeView):
-    template_name = 'users/update-password.html'
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class=form_class)
+        # print(form)
+        form.fields["email"].widget.attrs = {"placeholder": "email"}
+        form.fields["first_name"].widget.attrs = {"placeholder": "first name"}
+        form.fields["last_name"].widget.attrs = {"placeholder": "last_name"}
+        form.fields["gender"].widget.attrs = {"placeholder": "gender"}
+        form.fields["bio"].widget.attrs = {"placeholder": "bio"}
+        form.fields["birthday"].widget.attrs = {"placeholder": "birthday"}
+        form.fields["language"].widget.attrs = {"placeholder": "language"}
+        form.fields["currency"].widget.attrs = {"placeholder": "currency"}
+        return form
+
+
+class UpdatePasswordView(
+    mixins.EmailLoginOnlyMixin,
+    mixins.LoggedInOnlyView,
+    SuccessMessageMixin,
+    PasswordChangeView,
+):
+    template_name = "users/update-password.html"
+    success_message = "비밀번호가 업데이트 됐어요"
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class=form_class)
+        print(form)
+        form.fields["old_password"].widget.attrs = {"placeholder": "현재 비밀번호"}
+        form.fields["new_password1"].widget.attrs = {"placeholder": "새 비밀번호"}
+        form.fields["new_password2"].widget.attrs = {"placeholder": "새 비밀번호 확인"}
+        return form
+
+    def get_success_url(self):
+        return self.request.get_absolute_url()
