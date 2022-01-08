@@ -6,6 +6,7 @@ import os
 from django.urls import reverse
 from django.views import View
 from django.views.generic import FormView, DetailView, UpdateView
+from django.contrib.auth.views import PasswordChangeView
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse_lazy
@@ -232,9 +233,9 @@ class UpdateProfileView(UpdateView):
     model = models.User
     template_name = "users/update-profile.html"
     fields = (
+        "email",
         "first_name",
         "last_name",
-        "avatar",
         "gender",
         "bio",
         "birthday",
@@ -245,3 +246,5 @@ class UpdateProfileView(UpdateView):
     def get_object(self, queryset=None):
         return self.request.user
 
+class UpdatePasswordView(PasswordChangeView):
+    template_name = 'users/update-password.html'
