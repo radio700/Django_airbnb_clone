@@ -1,10 +1,13 @@
 from django.http.response import Http404
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.urls.base import reverse
 from django.views.generic import ListView, DetailView, UpdateView
 from . import forms
 from . import models
 from django.core.paginator import Paginator
 from users import mixins as user_mixins
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 # def all_rooms(request):
@@ -158,3 +161,19 @@ class RoomPhotosview(user_mixins.LoggedInOnlyView, DetailView):
         if room.host.pk != self.request.user.pk:
             raise Http404()
         return room
+
+@login_required
+def delete_photo(request, room_pk, photo_pk):
+    user = request.user
+    try:
+        room = models.Room.objects.get(pk=room_pk)
+        if room.host.pk != user.pk:
+            messages.error(request, "Can't delete")
+        else:
+            photo = models.Photo
+            photo.delete()
+            messages.success(request, "Photo Deleted!!")
+        return redirect(reverse("rooms:photos", kwargs={"pk": room_pk}))
+    except models.Room.DoesNotExist:
+        return redirect(reverse("core:home"))
+    
