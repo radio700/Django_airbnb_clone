@@ -192,9 +192,7 @@ class EditPhotoView(user_mixins.LoggedInOnlyView, SuccessMessageMixin , UpdateVi
 
 class AddPhotoview(user_mixins.LoggedInOnlyView, FormView):
     
-    model = models.Photo
     template_name = "rooms/photo_create.html"
-    fields = ("caption", "file")
     #create view 이용하는데 form을 바꿔야한다면 form view를 이용하면 됨 rooms/form.py에 CreatePhotoForm을 만들어주고
     form_class = forms.CreatePhotoForm
 
@@ -203,4 +201,6 @@ class AddPhotoview(user_mixins.LoggedInOnlyView, FormView):
         form.save(pk)
         messages.success(self.request, "Photo Uploaded")
         return redirect(reverse("rooms:photos", kwargs={"pk": pk}))
+
+
     

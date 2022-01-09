@@ -38,4 +38,3 @@ class CreatePhotoForm(forms.ModelForm):
         photo.room = room
         photo.save()
 
-        
