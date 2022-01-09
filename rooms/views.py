@@ -1,8 +1,10 @@
+from django.http.response import Http404
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, UpdateView
 from . import forms
 from . import models
 from django.core.paginator import Paginator
+from users import mixins as user_mixins
 
 # Create your views here.
 # def all_rooms(request):
@@ -116,3 +118,43 @@ def search(request):
     
     return render(request, "rooms/search.html", {"form": form})
     # 요걸로 장난치는 사람이 있어요 그래서 랜더링을 해줘야 해요↑
+
+class EditRoomView(user_mixins.LoggedInOnlyView,UpdateView):
+    model = models.Room
+    template_name = "rooms/room_edit.html"
+    fields = {
+        "name",
+        "description",
+        "country",
+        "city",
+        "price",
+        "address",
+        "guest",
+        "beds",
+        "bedrooms",
+        "baths",
+        "check_in",
+        "check_out",
+        "instant_book",
+        "room_type",
+        "amenities",
+        "facilities",
+        "house_rules",
+    }
+
+    def get_object(self, queryset = None):
+        room = super().get_object(queryset=queryset)
+        if room.host.pk != self.request.user.pk:
+            raise Http404()
+        return room
+
+class RoomPhotosview(user_mixins.LoggedInOnlyView, DetailView):
+
+    model = models.Room
+    template_name = "rooms/room_photos.html"
+
+    def get_object(self, queryset = None):
+        room = super().get_object(queryset=queryset)
+        if room.host.pk != self.request.user.pk:
+            raise Http404()
+        return room
