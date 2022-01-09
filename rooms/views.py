@@ -1,7 +1,7 @@
 from django.http.response import Http404
 from django.shortcuts import redirect, render
 from django.urls.base import reverse
-from django.views.generic import ListView, DetailView, UpdateView
+from django.views.generic import ListView, DetailView, UpdateView, FormView
 from django.core.paginator import Paginator
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
@@ -170,8 +170,7 @@ def delete_photo(request, room_pk, photo_pk):
         if room.host.pk != user.pk:
             messages.error(request, "Can't delete")
         else:
-            photo = models.Photo
-            photo.delete()
+            models.Photo.objects.filter(pk=photo_pk).delete()
             messages.success(request, "Photo Deleted!!")
         return redirect(reverse("rooms:photos", kwargs={"pk": room_pk}))
     except models.Room.DoesNotExist:
@@ -189,4 +188,19 @@ class EditPhotoView(user_mixins.LoggedInOnlyView, SuccessMessageMixin , UpdateVi
         room_pk = self.kwargs.get("room_pk")
         
         return reverse("rooms:photos", kwargs={"pk": room_pk})
+
+
+class AddPhotoview(user_mixins.LoggedInOnlyView, FormView):
+    
+    model = models.Photo
+    template_name = "rooms/photo_create.html"
+    fields = ("caption", "file")
+    #create view 이용하는데 form을 바꿔야한다면 form view를 이용하면 됨 rooms/form.py에 CreatePhotoForm을 만들어주고
+    form_class = forms.CreatePhotoForm
+
+    def form_valid(self, form):
+        pk = self.kwargs.get("pk")
+        form.save(pk)
+        messages.success(self.request, "Photo Uploaded")
+        return redirect(reverse("rooms:photos", kwargs={"pk": pk}))
     
