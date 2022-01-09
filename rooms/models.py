@@ -1,8 +1,10 @@
+from calendar import Calendar
 from django.db import models
 from django_countries.fields import CountryField
 from core import models as core_models
 from users import models as user_models
 from django.urls import reverse
+from cal import Calendar
 
 # Create your models here.
 
@@ -72,9 +74,13 @@ class Room(core_models.TimeStampModel):
     check_out = models.TimeField()
     instant_book = models.BooleanField(default=False)
 
-    host = models.ForeignKey(user_models.User, related_name="rooms", on_delete=models.CASCADE)
-    room_type = models.ForeignKey(RoomType, related_name="rooms", on_delete=models.SET_NULL, null=True)
-    
+    host = models.ForeignKey(
+        user_models.User, related_name="rooms", on_delete=models.CASCADE
+    )
+    room_type = models.ForeignKey(
+        RoomType, related_name="rooms", on_delete=models.SET_NULL, null=True
+    )
+
     amenities = models.ManyToManyField(Amenity, related_name="rooms", blank=True)
     facilities = models.ManyToManyField(Facility, related_name="rooms", blank=True)
     house_rules = models.ManyToManyField(HouseRule, related_name="rooms", blank=True)
@@ -109,3 +115,8 @@ class Room(core_models.TimeStampModel):
     def get_next_four_photos(self):
         photos = self.photos.all()[1:5]
         return photos
+
+    def get_calendars(self):
+        this_month = Calendar(2019, 11)
+        next_month = Calendar(2020, 1)
+        return [this_month, next_month]
