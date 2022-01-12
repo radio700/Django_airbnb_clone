@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load jaws_capitals %}
 {% block page_title %}{{room.name}}{% endblock page_title %}
 {% block content %}
 
@@ -94,6 +95,7 @@
     {% if room.host == user %}
     	<a href="{% url 'rooms:edit' room.pk %}" class="btn-link block">Edit button</a>
     {% else %}
+    {{'ggggbababy'|jaws_capitals}}
 		{% if not request.session.is_hosting %}
 			{% for calendar in room.get_calendars %}
 				<div class="mb-20">
