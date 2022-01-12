@@ -38,6 +38,7 @@ class Reservation(core_models.TimeStampModel):
     guest = models.ForeignKey("users.User", on_delete=models.CASCADE)
     room = models.ForeignKey("rooms.Room", on_delete=models.CASCADE)
 
+
     def __str__(self):
         return f"{self.room} - {self.check_in}"
 
@@ -49,7 +50,10 @@ class Reservation(core_models.TimeStampModel):
 
     def is_finished(self):
         now = timezone.now().date()
-        return now > self.check_out
+        is_finished = now > self.check_out
+        if is_finished:
+            BookedDay.objects.filter(reservation=self).delete()
+        return is_finished
 
     is_finished.boolean = True
 

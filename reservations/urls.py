@@ -6,5 +6,7 @@ app_name = "reservations"
 # http://127.0.0.1:8000/reservations/
 
 urlpatterns = [
-    path("create/<int:room>/<int:year>/<int:month>-<int:date>", views.create, name="create"),
+    path("create/<int:room>/<int:year>-<int:month>-<int:day>",views.create,name="create",),
+    path("<int:pk>", views.ReservationDetailView.as_view(), name="detail"),
+    path("<int:pk>/<str:verb>", views.edit_reservation, name="edit"),
 ]
