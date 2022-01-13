@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
-{% load jaws_capitals %}
-{% load is_booked %}
+{% load i18n is_booked on_favs %}
 {% block page_title %}{{room.name}}{% endblock page_title %}
 {% block content %}
 
@@ -27,6 +25,14 @@
 				<span class="mt-3 text-m text-gray-500">{{room.host.first_name}}</span>
 			</a>
 		</div>
+
+		{% on_favs room as on_favs_boolean %}
+		{% if on_favs_boolean %}
+			<a class="block mb-10 w-2/6 bg-teal-500" href="{% url 'lists:toggle_room' room.pk %}?action=remove">{% trans "remove from Favourites" %}</a>
+		{% else %}
+			<a class="block mb-10 w-2/6" href="{% url 'lists:toggle_room' room.pk %}?action=add">{% trans "Save to Favourites" %}</a>
+		{% endif %}
+
 		<div class="flex border-section">
 			<span class="mr-5 font-light">{{ room.room_type }}</span>
 			<span class="mr-5 font-light">{{ room.beds }} {% trans "bed" %}{{ room.beds|pluralize }}</span>
@@ -96,6 +102,7 @@
     {% if room.host == user %}
 		<a href="{% url 'rooms:edit' room.pk %}" class="btn-link block">{% trans "Edit button" %}</a>
     {% else %}
+	
 		{% if not request.session.is_hosting %}
 			{% for calendar in room.get_calendars %}
 				<div class="mb-20">
@@ -106,7 +113,6 @@
 						{% endfor %}
 					</div>
 					<div class="cal-grid">
-
 						{% for day in calendar.get_days %}
 						{% is_booked room day as is_booked_bool %}
 							{% if day.number != 0 %}
