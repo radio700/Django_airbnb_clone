@@ -6,6 +6,7 @@ from django.core.mail import send_mail
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 
@@ -19,16 +20,16 @@ class User(AbstractUser):
     GENDER_FEMALE = "female"
 
     GENDER_CHOICES = (
-        (GENDER_MALE, "male"),
-        (GENDER_FEMALE, "female"),
+        (GENDER_MALE, _("male")),
+        (GENDER_FEMALE, _("female")),
     )
 
     LANGUAGE_ENGLISH = "En"
     LANGUAGE_KOREAN = "Ko"
 
     LANGUAGE_CHOICES = (
-        (LANGUAGE_ENGLISH, "English"),
-        (LANGUAGE_KOREAN, "Korean"),
+        (LANGUAGE_ENGLISH, _("English")),
+        (LANGUAGE_KOREAN, _("Korean")),
     )
 
     CURRENCY_USD = "usd"
@@ -50,11 +51,11 @@ class User(AbstractUser):
     )
 
     avatar = models.ImageField(upload_to="avatars", blank=True)
-    gender = models.CharField(choices=GENDER_CHOICES, max_length=10, blank=True)
-    bio = models.TextField(blank=True)
-    birthday = models.DateField(blank=True, null=True)
+    gender = models.CharField(_('gender'), choices=GENDER_CHOICES, max_length=10, blank=True)
+    bio = models.TextField(_('bio'),blank=True)
+    birthday = models.DateField(_('birthday'),blank=True, null=True)
     language = models.CharField(
-        choices=LANGUAGE_CHOICES, blank=True, max_length=2, default=LANGUAGE_KOREAN
+        _("language"), choices=LANGUAGE_CHOICES, blank=True, max_length=2, default=LANGUAGE_KOREAN
     )
     currency = models.CharField(
         choices=CURRENCY_CHOICES, blank=True, max_length=3, default=CURRENCY_KRW
@@ -75,7 +76,7 @@ class User(AbstractUser):
             self.email_secret = secret
             html_message = render_to_string("emails/verify_email.html", {"secret": secret})
             send_mail(
-                "Verify Airbnb Account",
+                _("Verify Airbnb Account"),
                 strip_tags(html_message),
                 settings.EMAIL_FROM,
                 [self.email],

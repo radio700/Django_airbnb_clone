@@ -1,33 +1,36 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block page_title %}HOME{% endblock page_title %}
 {% block content %}
 
 <div class="container mx-auto pb-10">
 
-  <div class="rounded-xl bg-gray-800 -mx-40 h-50vh my-32 mb-24 bg-cover bg-center" style="background-image:url(https://images.unsplash.com/photo-1641305286482-1b33273e7575?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80)" ></div>
+	<div class="rounded-xl bg-gray-800 -mx-40 h-50vh my-32 mb-24 bg-cover bg-center" style="background-image:url(https://images.unsplash.com/photo-1641305286482-1b33273e7575?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80)" ></div>
 
-  <div class="flex flex-wrap -mx-40 mg-10">
-    {% for room in rooms  %}
-        {% include 'mixins/room_card.html' with room=room %}
-    {% endfor %}
-  </div>
+	<div class="flex flex-wrap -mx-40 mg-10">
+		{% for room in rooms  %}
+			{% include 'mixins/room_card.html' with room=room %}
+		{% endfor %}
+	</div>
 
     <div class="flex items-center mx-auto container justify-center">
-    {% if page_obj.has_previous %}
-        <a href="?page={{page_obj.previous_page_number}}" class="text-teal-400">
-          <i class="fas fa-arrow-left fa-lg"></i>
-        </a>
-    {% endif %}
-  
-    <span class="mx-3 font-medium text-lg">{{page_obj.number}} of {{page_obj.paginator.num_pages}}</span>
-  
-    {% if page_obj.has_next  %}
-    <a href="?page={{page_obj.next_page_number}}" class="text-teal-400">
-      <i class="fas fa-arrow-right fa-lg"></i>
-    </a>
-    {% endif %}
-  
-  </div>
+		{% if page_obj.has_previous %}
+			<a href="?page={{page_obj.previous_page_number}}" class="text-teal-400">
+				<i class="fas fa-arrow-left fa-lg"></i>
+			</a>
+		{% endif %}
+	
+		<span class="mx-3 font-medium text-lg">
+			{% blocktrans with current_page=page_obj.number total_pages=page_obj.paginator.num_pages %}Page {{current_page}} of {{total_pages}}{% endblocktrans %}
+		</span>
+	
+		{% if page_obj.has_next  %}
+			<a href="?page={{page_obj.next_page_number}}" class="text-teal-400">
+				<i class="fas fa-arrow-right fa-lg"></i>
+			</a>
+		{% endif %}
+
+	</div>
 </div>
 
 

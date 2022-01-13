@@ -1,0 +1,140 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-01-13 16:01+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: .\templates\base.html:27
+msgid "Search By City"
+msgstr "도시로찾기"
+
+#: .\templates\partials\footer.html:5
+msgid "dont'copy us"
+msgstr "카피금지"
+
+#: .\templates\partials\footer.html:7
+msgid "All rights reserved."
+msgstr "모든 권한 보유 "
+
+#: .\templates\partials\nav.html:7
+msgid "Stop hosting"
+msgstr "방장모드 중지"
+
+#: .\templates\partials\nav.html:9
+msgid "Start hosting"
+msgstr "방장모드 시작"
+
+#: .\templates\partials\nav.html:14
+msgid "Create room"
+msgstr "방 만들기"
+
+#: .\templates\partials\nav.html:17
+msgid "Profile"
+msgstr "프로필"
+
+#: .\templates\partials\nav.html:18
+msgid "logout"
+msgstr "로그아웃"
+
+#: .\templates\partials\nav.html:20
+msgid "Log in"
+msgstr "로그인"
+
+#: .\templates\partials\nav.html:21
+msgid "Sign up"
+msgstr "회원가입"
+
+#: .\templates\rooms\room_detail.html:32
+msgid "bed"
+msgstr "침대"
+
+#: .\templates\rooms\room_detail.html:33
+msgid "bedroom"
+msgstr "방"
+
+#: .\templates\rooms\room_detail.html:34
+msgid "bath"
+msgstr "욕조"
+
+#: .\templates\rooms\room_detail.html:35
+msgid "guest"
+msgstr "손님"
+
+#: .\templates\rooms\room_detail.html:43
+msgid "Amenities"
+msgstr "시설"
+
+#: .\templates\rooms\room_detail.html:50
+msgid "Facilities"
+msgstr "설비"
+
+#: .\templates\rooms\room_detail.html:57
+msgid "House_rules"
+msgstr "규칙"
+
+#: .\templates\rooms\room_detail.html:64
+msgid "Reviews"
+msgstr "리뷰"
+
+#: .\templates\rooms\room_detail.html:97
+msgid "Edit button"
+msgstr "수정하기"
+
+#: .\templates\rooms\room_list.html:24
+#, python-format
+msgid "Page %(current_page)s of %(total_pages)s"
+msgstr "총페이지 %(current_page)s 중 %(total_pages)s"
+
+#: .\users\mixins.py:13 .\users\mixins.py:23
+msgid "you have no permission"
+msgstr "권한이 없습니다"
+
+#: .\users\models.py:23
+msgid "male"
+msgstr "남"
+
+#: .\users\models.py:24
+msgid "female"
+msgstr "여"
+
+#: .\users\models.py:31
+msgid "English"
+msgstr "영어"
+
+#: .\users\models.py:32
+msgid "Korean"
+msgstr "한국어"
+
+#: .\users\models.py:54
+msgid "gender"
+msgstr "남"
+
+#: .\users\models.py:55
+msgid "bio"
+msgstr "여"
+
+#: .\users\models.py:56
+msgid "birthday"
+msgstr "생일"
+
+#: .\users\models.py:58
+msgid "language"
+msgstr "언어"
+
+#: .\users\models.py:79
+msgid "Verify Airbnb Account"
+msgstr "에어비엔비 계정 확인"

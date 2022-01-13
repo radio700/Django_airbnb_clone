@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load jaws_capitals %}
 {% load is_booked %}
 {% block page_title %}{{room.name}}{% endblock page_title %}
@@ -6,12 +7,12 @@
 
 
 <div class="-mt-5 container max-w-full h-75vh flex mb-20">
-  <div class="h-full w-1/2 bg-cover" style="background-image:url({{room.first_photo}})"></div>
-  <div class="h-full w-1/2 flex flex-wrap">
-    {% for photo in room.get_next_four_photos %}
-      <div style="background-image:url({{photo.file.url}})" class="w-1/2 h-auto bg-cover bg-center border-gray-700 border"></div>
-    {% endfor %}
-  </div>
+	<div class="h-full w-1/2 bg-cover" style="background-image:url({{room.first_photo}})"></div>
+	<div class="h-full w-1/2 flex flex-wrap">
+		{% for photo in room.get_next_four_photos %}
+			<div style="background-image:url({{photo.file.url}})" class="w-1/2 h-auto bg-cover bg-center border-gray-700 border"></div>
+		{% endfor %}
+	</div>
 </div>
 
 <div class="container mx-auto flex justify-around pb-56">
@@ -28,10 +29,10 @@
 		</div>
 		<div class="flex border-section">
 			<span class="mr-5 font-light">{{ room.room_type }}</span>
-			<span class="mr-5 font-light">{{ room.beds }} bed{{ room.beds|pluralize }}</span>
-			<span class="mr-5 font-light">{{ room.bedrooms }} bedroom{{ room.bedrooms|pluralize }}</span>
-			<span class="mr-5 font-light">{{ room.baths }} bath{{ room.baths|pluralize }}</span>
-			<span class="mr-5 font-light">{{ room.guests }} guest{{ room.guests|pluralize }}</span>
+			<span class="mr-5 font-light">{{ room.beds }} {% trans "bed" %}{{ room.beds|pluralize }}</span>
+			<span class="mr-5 font-light">{{ room.bedrooms }} {% trans "bedroom" %}{{ room.bedrooms|pluralize }}</span>
+			<span class="mr-5 font-light">{{ room.baths }} {% trans "bath" %}{{ room.baths|pluralize }}</span>
+			<span class="mr-5 font-light">{{ room.guests }} {% trans "guest" %}{{ room.guests|pluralize }}</span>
 		</div>
 		
 		<p class="border-section">
@@ -39,28 +40,28 @@
 		</p>
 
 		<div class="border-section">
-			<h4 class="font-medium text-lg mb-5">Amenities</h4>
+			<h4 class="font-medium text-lg mb-5">{% trans "Amenities" %}</h4>
 				{% for a in room.amenities.all %}
 					<li class="mb-2">{{a}}</li>
 				{% endfor %}
 		</div>
 		
 		<div class="border-section">
-			<h4 class="font-medium text-lg mb-5">Facilities</h4>
+			<h4 class="font-medium text-lg mb-5">{% trans "Facilities" %}</h4>
 				{% for f in room.facilities.all %}
 				<li class="mb-2">{{f}}</li>
 				{% endfor %}
 		</div>
 
 		<div class="border-section">
-			<h4 class="font-medium text-lg mb-5">House_rules</h4>
+			<h4 class="font-medium text-lg mb-5">{% trans "House_rules" %}</h4>
 				{% for f in room.house_rules.all %}
 				<li class="mb-2">{{f}}</li>
 				{% endfor %}
 		</div>
 
 		<div class="mt-10">
-			<h4 class="font-medium text-2xl mb-5">Reviews</h4>
+			<h4 class="font-medium text-2xl mb-5">{% trans "Reviews" %}</h4>
 			<div class="flex items-center">
 				<div class="mr-5">
 					<i class="fas fa-star text-teal-500"></i>
@@ -93,7 +94,7 @@
 
 	<div class="w-1/3">
     {% if room.host == user %}
-		<a href="{% url 'rooms:edit' room.pk %}" class="btn-link block">Edit button</a>
+		<a href="{% url 'rooms:edit' room.pk %}" class="btn-link block">{% trans "Edit button" %}</a>
     {% else %}
 		{% if not request.session.is_hosting %}
 			{% for calendar in room.get_calendars %}

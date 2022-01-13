@@ -7,9 +7,12 @@
         <span>&copy; 2021 radio700. {% trans "All rights reserved." %}</span>
     </div>
     <div class="flex mt-10">
-        <select class="w-1/5 h-8" name="js-lang" id="js-lang">
-            <option value="en">English</option>
-            <option value="kr">한국어</option>
+        {% get_current_language as LANGUAGE_CODE %}
+        <select class="w-1/5 h-8" id="js-lang">
+
+            <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>English</option>
+            <option value="kr" {% if LANGUAGE_CODE == 'ko' %}selected{% endif %}>한국어</option>
+
         </select>
     </div>
 </footer>
