@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-13 16:01+0900\n"
+"POT-Creation-Date: 2022-01-14 13:14+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,9 +18,35 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+#: .\templates\404.html:8
+msgid "page not found"
+msgstr "페이지를 찾을 수 없습니다"
+
 #: .\templates\base.html:27
 msgid "Search By City"
 msgstr "도시로찾기"
+
+#: .\templates\conversations\conversation_detail.html:5
+msgid "Conversation"
+msgstr "대화"
+
+#: .\templates\conversations\conversation_detail.html:16
+msgid "Conversation between:"
+msgstr "님과 대화"
+
+#: .\templates\conversations\conversation_detail.html:32
+msgid "no messages"
+msgstr "메시지 없음"
+
+#: .\templates\conversations\conversation_detail.html:57
+msgid "Send Comment"
+msgstr "메시지 보내기"
+
+#: .\templates\lists\list_detail.html:9
+#, fuzzy
+#| msgid "Save to Favourites"
+msgid "your favorites"
+msgstr "즐겨찾기 추가"
 
 #: .\templates\partials\footer.html:5
 msgid "dont'copy us"
@@ -43,54 +69,104 @@ msgid "Create room"
 msgstr "방 만들기"
 
 #: .\templates\partials\nav.html:17
+msgid "Favs"
+msgstr "즐겨찾기"
+
+#: .\templates\partials\nav.html:18
 msgid "Profile"
 msgstr "프로필"
 
-#: .\templates\partials\nav.html:18
+#: .\templates\partials\nav.html:19
 msgid "logout"
 msgstr "로그아웃"
 
-#: .\templates\partials\nav.html:20
+#: .\templates\partials\nav.html:21
 msgid "Log in"
 msgstr "로그인"
 
-#: .\templates\partials\nav.html:21
+#: .\templates\partials\nav.html:22 .\templates\users\login.html:15
 msgid "Sign up"
 msgstr "회원가입"
 
-#: .\templates\rooms\room_detail.html:32
+#: .\templates\partials\social_login.html:5
+msgid "login with Github"
+msgstr "깃허브로 로그인하기"
+
+#: .\templates\partials\social_login.html:9
+msgid "login with KaKao"
+msgstr "카카오로 로그인하기"
+
+#: .\templates\reservations\detail.html:4
+msgid "Reservation"
+msgstr "예약"
+
+#: .\templates\reservations\detail.html:31
+msgid "Contact your Airbnb Host"
+msgstr "Airbnb 호스트에게 연락하기"
+
+#: .\templates\reservations\detail.html:33
+msgid "Send a Message"
+msgstr "메시지 보내기"
+
+#: .\templates\reservations\detail.html:42
+msgid "Write your review"
+msgstr "리뷰를 써주세요"
+
+#: .\templates\reservations\detail.html:46
+#, fuzzy
+#| msgid "Reviews"
+msgid "Submit Review"
+msgstr "리뷰"
+
+#: .\templates\reservations\detail.html:50
+msgid "Cancel Reservation"
+msgstr "예약취소"
+
+#: .\templates\reservations\detail.html:52
+msgid "Confirm Reservation"
+msgstr "예약 확인"
+
+#: .\templates\rooms\room_detail.html:31
+msgid "remove from Favourites"
+msgstr "즐겨찾기 제거"
+
+#: .\templates\rooms\room_detail.html:33
+msgid "Save to Favourites"
+msgstr "즐겨찾기 추가"
+
+#: .\templates\rooms\room_detail.html:38
 msgid "bed"
 msgstr "침대"
 
-#: .\templates\rooms\room_detail.html:33
+#: .\templates\rooms\room_detail.html:39
 msgid "bedroom"
 msgstr "방"
 
-#: .\templates\rooms\room_detail.html:34
+#: .\templates\rooms\room_detail.html:40
 msgid "bath"
 msgstr "욕조"
 
-#: .\templates\rooms\room_detail.html:35
+#: .\templates\rooms\room_detail.html:41
 msgid "guest"
 msgstr "손님"
 
-#: .\templates\rooms\room_detail.html:43
+#: .\templates\rooms\room_detail.html:49
 msgid "Amenities"
 msgstr "시설"
 
-#: .\templates\rooms\room_detail.html:50
+#: .\templates\rooms\room_detail.html:56
 msgid "Facilities"
 msgstr "설비"
 
-#: .\templates\rooms\room_detail.html:57
+#: .\templates\rooms\room_detail.html:63
 msgid "House_rules"
 msgstr "규칙"
 
-#: .\templates\rooms\room_detail.html:64
+#: .\templates\rooms\room_detail.html:70
 msgid "Reviews"
 msgstr "리뷰"
 
-#: .\templates\rooms\room_detail.html:97
+#: .\templates\rooms\room_detail.html:103
 msgid "Edit button"
 msgstr "수정하기"
 
@@ -98,6 +174,40 @@ msgstr "수정하기"
 #, python-format
 msgid "Page %(current_page)s of %(total_pages)s"
 msgstr "총페이지 %(current_page)s 중 %(total_pages)s"
+
+#: .\templates\rooms\search.html:10 .\templates\rooms\search.html:14
+msgid "search"
+msgstr "검색하기"
+
+#: .\templates\rooms\search.html:17
+msgid "Results"
+msgstr "결과"
+
+#: .\templates\users\login.html:14
+msgid "Don't have an account?"
+msgstr "계정이 없나요?"
+
+#: .\templates\users\signup.html:14
+msgid "Do you have an Account?"
+msgstr "계정이 있나요?"
+
+#: .\templates\users\signup.html:15
+msgid "Login"
+msgstr "로그인"
+
+#: .\templates\users\update-profile.html:12
+msgid "Change password"
+msgstr "비밀번호 바꾸기"
+
+#: .\templates\users\user_detail.html:22
+#, fuzzy
+#| msgid "Profile"
+msgid "Edit Profile"
+msgstr "프로필"
+
+#: .\templates\users\user_detail.html:29
+msgid "'s Room"
+msgstr "의 방"
 
 #: .\users\mixins.py:13 .\users\mixins.py:23
 msgid "you have no permission"

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block page_title %}update profile{% endblock page_title %}
 {% block search-bar %}{% endblock search-bar %}
 {% block content %}
@@ -8,7 +9,7 @@
     {% include 'mixins/auth/auth_form.html' with form=form cta="update profile" %}
     {% if object.login_method == "email" %}
 		<div class="mt-5">
-			<a href="{% url 'users:password' %}" class="text-teal-500 font-medium">Change password</a>
+			<a href="{% url 'users:password' %}" class="text-teal-500 font-medium">{% trans "Change password" %}</a>
 	  </div>
     {% endif %}
   </div>

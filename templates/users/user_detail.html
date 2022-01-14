@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block page_title %}{{user_obj.first_name}}{{user_obj.last_name}}'s Profile{% endblock page_title %}
 {% block content %}
 
@@ -18,14 +19,14 @@
 		<span class="text-lg mb-5">{{user_obj.bio}}</span>
 	
 		{% if user == user_obj %}
-			<a href="{% url 'users:update' %}" class="btn-link">Edit Profile</a>
+			<a href="{% url 'users:update' %}" class="btn-link">{% trans "Edit Profile" %}</a>
 		{% endif %}
 		
 	</div>
 	
 		{% if user_obj.rooms.count > 0 %}
 		<div class="container mx-auto pb-10 flex flex-col items-center">
-			<h3 class="mb-12 text-2xl">{{user_obj.first_name}}'s Room</h3>
+			<h3 class="mb-12 text-2xl">{{user_obj.first_name}}{% trans "'s Room" %}</h3>
 			<div class="flex flex-wrap -mx-40 mg-10">
 				{% for room in user_obj.rooms.all %}
 					{% include 'mixins/room_card.html' with room=room %}

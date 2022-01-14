@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block page_title %}signup{% endblock page_title %}
 {% block search-bar %}{% endblock search-bar %}
 {% block content %}
@@ -10,8 +11,8 @@
     {% include 'mixins/auth/auth_form.html' with form=form cta="Sign up" %} 
 
   <div class="mt-5">
-    <span class="mr-2">계정이 있읍니까?</span>
-    <a href="{% url 'users:login' %}" class="text-teal-500 font-medium">Login</a>
+    <span class="mr-2">{% trans "Do you have an Account?" %}</span>
+    <a href="{% url 'users:login' %}" class="text-teal-500 font-medium">{% trans "Login" %}</a>
   </div>
 </div>
 
