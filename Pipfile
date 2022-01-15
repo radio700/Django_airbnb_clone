@@ -13,6 +13,8 @@ django-seed = "*"
 psycopg2 = "*"
 requests = "*"
 django-dotenv = "*"
+pipenv-to-requirements = "*"
+awsebcli = "*"
 
 [dev-packages]
 awsebcli = "*"
